@@ -1,8 +1,26 @@
 
 import 'package:flutter/material.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 void main() {
   runApp(const CineApp());
+}
+
+Future<Map<String, dynamic>> obtenerPikachu() async {
+  final url = Uri.parse(
+    'https://pokeapi.co/api/v2/pokemon/pikachu',
+  );
+
+  final respuesta = await http.get(url);
+
+  if (respuesta.statusCode == 200) {
+    return jsonDecode(respuesta.body)
+    as Map<String, dynamic>;
+  } else {
+    throw Exception(
+      'No se pudo obtener la informacion de Pikachu',
+    );
+  }
 }
 
 class CineApp extends StatelessWidget {
@@ -20,6 +38,9 @@ class CineApp extends StatelessWidget {
 
 class PantallaInicio extends StatelessWidget {
   const PantallaInicio({super.key});
+
+  static final Future<Map<String, dynamic>> datosPikachu =
+  obtenerPikachu();
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +155,78 @@ class PantallaInicio extends StatelessWidget {
                     tarjetaPelicula('Película 4', Colors.orange),
                   ],
                 ),
+
+                const SizedBox(height: 25),
+
+                const Text(
+                  'Especial: Detective Pikachu',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                FutureBuilder<Map<String, dynamic>>(
+                  future: datosPikachu,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    if (snapshot.hasError) {
+                      return const Text('Error al consultar la API');
+                    }
+
+                    if (!snapshot.hasData) {
+                      return const Text('No hay informacion disponible');
+                    }
+
+                    final pokemon = snapshot.data!;
+                    final imagen = pokemon['sprites']['front_default'];
+
+                    return Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          if (imagen != null)
+                            Image.network(
+                              imagen.toString(),
+                              width: 100,
+                              height: 100,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.image_not_supported);
+                              },
+                            ),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Nombre: ${pokemon['name']}'),
+                                Text('Altura: ${pokemon['height']}'),
+                                Text('Peso: ${pokemon['weight']}'),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'Datos obtenidos de PokéAPI',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+
               ],
             ),
           ),
