@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689916771042",
+    "project_id": "cineapp-ldsw",
+    "storage_bucket": "cineapp-ldsw.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689916771042:android:c74966dadc322e999bbcbb",
+        "android_client_info": {
+          "package_name": "com.example.ldsw_utilizacion_de_widgets"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy4LAHesk45PrUqGpUTlgFJs5dfJ8MBCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
