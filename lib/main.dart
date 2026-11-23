@@ -2,144 +2,186 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MiAplicacion());
+  runApp(const CineApp());
 }
 
-class MiAplicacion extends StatelessWidget {
-  const MiAplicacion({super.key});
+class CineApp extends StatelessWidget {
+  const CineApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('LDSW - Catalogo de Peliculas'),
-          backgroundColor: Colors.indigo,
-          foregroundColor: Colors.white,
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Peliculas destacadas',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+      title: 'CineApp',
+      home: const PantallaInicio(),
+    );
+  }
+}
 
-              const SizedBox(height: 20),
+class PantallaInicio extends StatelessWidget {
+  const PantallaInicio({super.key});
 
-              Row(
-                children: [
-                  Expanded(
-                    child: tarjetaPelicula(
-                      'Aventura Espacial',
-                      'Ciencia ficcion',
-                      Colors.blue,
-                    ),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  Expanded(
-                    child: tarjetaPelicula(
-                      'Noche de Misterio',
-                      'Suspenso',
-                      Colors.deepPurple,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 25),
-
-              Container(
-                padding: const EdgeInsets.all(16),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.indigo.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'Mi primer catalogo de peliculas usando widgets de Flutter.',
-                  style: TextStyle(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+        title: const Text('CineApp'),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.all(12),
+            child: Icon(Icons.menu),
           ),
+        ],
+      ),
+
+      body: Stack(
+        children: [
+          // Imagen de fondo
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/fondo_cine.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // Capa para facilitar la lectura
+          Positioned.fill(
+            child: Container(
+              color: Colors.white.withValues(alpha: 0.55),
+            ),
+          ),
+
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Mensaje de bienvenida
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.indigo,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Column(
+                    children: [
+                      Icon(
+                        Icons.movie,
+                        size: 45,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        '¡Bienvenido a CineApp!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Hello World',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+                // Buscador de películas
+                const TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Buscar película...',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                const Text(
+                  'Películas populares',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                // Cuatro películas de ejemplo
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 1.05,
+                  children: [
+                    tarjetaPelicula('Película 1', Colors.blue),
+                    tarjetaPelicula('Película 2', Colors.purple),
+                    tarjetaPelicula('Película 3', Colors.teal),
+                    tarjetaPelicula('Película 4', Colors.orange),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+
+      // Menú inferior
+      bottomNavigationBar: const BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(Icons.home, size: 30),
+            Icon(Icons.favorite, color: Colors.red, size: 30),
+            Icon(Icons.person_outline, size: 30),
+          ],
         ),
       ),
     );
   }
 
-  Widget tarjetaPelicula(
-      String titulo,
-      String genero,
-      Color color,
-      ) {
+  Widget tarjetaPelicula(String nombre, Color color) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            children: [
-              Container(
-                height: 150,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.movie,
-                  size: 60,
-                  color: Colors.white,
-                ),
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(8),
               ),
-
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  color: Colors.amber,
-                  child: const Text(
-                    'NUEVO',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+              child: const Icon(
+                Icons.movie_creation,
+                size: 50,
+                color: Colors.white,
               ),
-            ],
-          ),
-
-          const SizedBox(height: 10),
-
-          Text(
-            titulo,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
             ),
           ),
-
+          const SizedBox(height: 8),
           Text(
-            genero,
+            nombre,
             style: const TextStyle(
-              fontSize: 13,
-              color: Colors.grey,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
